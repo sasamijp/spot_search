@@ -1,0 +1,65 @@
+
+<link rel="import" href="../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../bower_components/core-scaffold/core-scaffold.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/core-menu/core-menu.html">
+<link rel="import" href="../bower_components/core-menu/core-submenu.html">
+<link rel="import" href="../bower_components/core-selection/core-selection.html">
+<link rel="import" href="../bower_components/core-animation/core-animation.html">
+
+<ui-gmap-google-map id="map" ng-if='loaded' center='map.center' zoom='map.zoom' events='map.events' refresh='map.refresh' style='height:600px;'>
+  <header ng-repeat-start="v in makers"></header>
+  <ui-gmap-marker coords="v.coords" options="v.options" events="v.events" idkey="v.id" ng-if='v.attrs[selectedattr] == "1"' click="v.clicked(v.attrs)">
+    <ui-gmap-window options="windowOptions" closeClick="closeClick()">
+      <div class="profile">
+        <span class="title">{{v.attrs["attr0"]}}</span><br>
+        <span class="subtitle">{{v.attrs["attr1"]}}</span><br>
+        <span class="location">{{v.attrs["attr2"]}}</span><br>
+        <span class="tel">{{v.attrs["attr7"]}}</span><br>
+        <a href="{{urls[v.attrs['attr0']]}}" target=”_blank”>案内ページへ</a>
+      </div>
+    </ui-gmap-window>
+  </ui-gmap-marker>
+  <footer ng-repeat-end></footer>
+</ui-gmap-google-map>
+
+<paper-shadow id="selectorpaper">
+  <core-header-panel flex>
+    <core-toolbar>
+      <span flex>流山施設サーチ</span>
+    </core-toolbar>
+    <div id="about">公共施設検索サービスです。下のリストからやりたいことを選んでください。</div>
+    <core-menu selected="0" selectedindex="0" id="core_menu">
+      <header ng-repeat-start="v in categorie"></header>
+      <core-submenu id="core_submenu{{v.key}}}" icon="arrow-drop-down" label="{{v.key}}"  >
+        <header ng-repeat-start="_v in v.array"></header>
+        <core-item id="core_item{{_v}}" label="{{_v}}" ng-click="pin(_v)" horizontal center layout></core-item>
+        <footer ng-repeat-end></footer>
+      </core-submenu>
+      <footer ng-repeat-end></footer>
+    </core-menu>
+  </core-header-panel>
+</paper-shadow>
+
+<paper-shadow id="profilepaper" ng-if="selectedattr != ''">
+  <core-header-panel flex>
+    <core-toolbar>
+      <span flex id="profiletitle">{{selectedname}}</span>
+    </core-toolbar>
+    <header ng-repeat-start="v in makers"></header>
+    <div class="listitem" ng-if='v.attrs[selectedattr] == "1"'>
+      <h2>{{v.attrs["attr0"]}}</h2>
+      <span>{{v.attrs["attr1"]}}</span><br>
+      <span>{{v.attrs["attr2"]}}</span><br>
+      <span>{{v.attrs["attr7"]}}</span><br>
+      <a href="{{urls[v.attrs['attr0']]}}" target=”_blank”>案内ページへ</a>
+    </div>
+    <footer ng-repeat-end></footer>
+  </core-header-panel>
+</paper-shadow>
+
+<paper-toast id="infotoast" text="{{selected}}" duration="6000" onclick="discardDraft(el)"></paper-toast>
